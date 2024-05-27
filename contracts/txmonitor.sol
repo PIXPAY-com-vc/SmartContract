@@ -11,7 +11,7 @@ contract TXMonitor is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     address public usdtTokenContractAddress;
-    string public bussinessId;
+    string public businessId;
 
     receive() external payable {
         // The contract can receive MATIC (ETH) transfers here
@@ -21,9 +21,9 @@ contract TXMonitor is Ownable, ReentrancyGuard {
     event Withdraw(address senderWallet,address indexed receiverWallet, uint256 indexed amount,bytes message);
     event TokensWithdraw(address indexed destination,uint256 amount);
 
-    constructor(address initialOwner, address _usdtTokenContractAddress, string memory _bussinessId)
+    constructor(address initialOwner, address _usdtTokenContractAddress, string memory _businessId)
     Ownable(initialOwner) {
-        bussinessId = _bussinessId;
+        businessId = _businessId;
         usdtTokenContractAddress = _usdtTokenContractAddress;
     }
 
@@ -35,10 +35,10 @@ contract TXMonitor is Ownable, ReentrancyGuard {
         require(amount > 0, "Amount must be greater than 0");
         require(recipient != address(0), "Invalid destination address");
         
+        // Transfer the amount to the destination address
+        IERC20(usdtTokenContractAddress).transferFrom(msg.sender, recipient, amount);
+
         if(txtype == 0 ){
-       
-            // Transfer the amount to the destination address
-            IERC20(usdtTokenContractAddress).transferFrom(msg.sender, recipient, amount);
 
             emit Deposit(msg.sender,recipient,amount,memo);
 

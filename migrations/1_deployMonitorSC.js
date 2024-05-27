@@ -11,12 +11,12 @@ module.exports = async function(deployer, network, accounts) {
     const currentAccount = accounts[0];
 
     const usdtContractAddress = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";   // Default Polygon USDT address
-    const bussinessId = ""; // choose your bussiness ID EX: STORE12345
+    const businessId = ""; // choose your bussiness ID EX: abc123
 
     /**
      * Deploy Token
      */
-    deployer.deploy(Token, currentAccount, usdtContractAddress, bussinessId).then((tx) => {      
+    deployer.deploy(Token, currentAccount, usdtContractAddress, businessId).then((tx) => {      
      logTx(tx);
     })
 };
