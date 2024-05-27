@@ -2,7 +2,7 @@ const fs = require('fs');
 
 // Function to generate a random string of letters
 function generateRandomLetters(length) {
-    const chars = 'abcdefghijklmnopqrstuvwxyz';
+    const chars = 'abcdefghijklmnopqrstuvwxyz'; // only lowercase
     let result = '';
     for (let i = 0; i < length; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
