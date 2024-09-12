@@ -7,7 +7,7 @@ const EthCrypto = require('eth-crypto');
 // Configuration
 
 // Public WebSocket RPC --  can use your own RPC for more performance and less rate limit
-const websocketRPC = "wss://polygon-mainnet.g.alchemy.com/v2/hQVqFUlQfk1ELZkRz3zXlmjJGGx_Pshy";
+const websocketRPC = "wss://polygon.api.onfinality.io/public-ws";
 
 const currentTimeFormatted = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
