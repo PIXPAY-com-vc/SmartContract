@@ -11,9 +11,8 @@ const websocketRPC = "wss://polygon-mainnet.g.alchemy.com/v2/hQVqFUlQfk1ELZkRz3z
 
 const currentTimeFormatted = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
-const MONITOR_CONTRACT_ADDRESS = "0x707E1Af57f99eF4c10Fd8795adfa6dB78FEd3cE2"; // Your SmartContract for Splitter provided by Digital Horizon
-const smpWallet = "" // SmartPay verified Address
-const hotWallet = "0xCB6e1468f05853ecb603A1988cdC8a136650298f" // Platform HotWallet Address
+const MONITOR_CONTRACT_ADDRESS = "0x70...."; // Your SmartContract for Splitter 
+const hotWallet = "0x..." // Platform HotWallet Address
 const privateKey = ""; // Your private key EX:
 
 // End Configuration
@@ -58,7 +57,7 @@ async function getPastEvents() {  // can use a parameter to filter here, a txhas
         // Process each past event
         for (const event of pastEvents) {
 
-            const { message: memoHex, receiverWallet: to , senderWallet: from, amount: value } = event.args;
+            const { msgId, message: memoHex, receiverWallet: to , senderWallet: from, amount: value, encrypt } = event.args;
             
             console.log("EVENT TX HASH ", event.transactionHash);
             console.log("EVENT RECEIVER WALLET : ", to);
@@ -67,7 +66,19 @@ async function getPastEvents() {  // can use a parameter to filter here, a txhas
 
             // You can filter by event argument here to decrypt specific info etc
             // if(event.transactionHash === "0x") or if(receiverWallet === "0x...") etc
-            const decryptedMemo = await decryptMemo(memoHex);
+            let decryptedMemo;
+
+            if(encrypt === true){
+            
+             decryptedMemo = await decryptMemo(memoHex);
+
+            } else {
+            
+            const utf8String = Buffer.from(memoHex.slice(2), 'hex').toString('utf8');
+
+            decryptedMemo = JSON.parse(utf8String);
+
+            }
 
             if (decryptedMemo) {
                 console.log("Decrypted Memo:", decryptedMemo);
@@ -84,5 +95,5 @@ async function getPastEvents() {  // can use a parameter to filter here, a txhas
 getPastEvents();
 
 // Call the function to get past events for a specific transaction hash
-const txHash = "0xf74931971ab9c36bdb7acee673b6eea24af9bdb0a17d446566de1b77fad7d529";
+const txHash = "0xf..";
 // getPastEvents(txHash);

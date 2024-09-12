@@ -66,10 +66,10 @@ The TXMonitor Smart Contract is designed to monitor and manage token transfers o
 The contract emits the following events:
 
 - **Deposit:** Emits when calling 'transfer' using txtype 0 for when you are tracking deposits.
-  - Parameters: `senderWallet`, `receiverWallet`, `amount`, `message`
+  - Parameters: `senderWallet`, `receiverWallet`, `amount`, `message`, `msgId`, `encrypt`
 
 - **Withdraw:** Emits when calling 'transfer' using txtype 1 for when you are tracking withdraws.
-  - Parameters: `senderWallet`, `receiverWallet`, `amount`, `message`
+  - Parameters: `senderWallet`, `receiverWallet`, `amount`, `message`, `msgId`, `encrypt`
 
 - **TokensWithdraw:** Emits when tokens are withdrawn from the contract to a specified destination.
   - Parameters: `destination`, `amount`
@@ -81,6 +81,3 @@ Explore the demo folder to see practical examples of interacting with the TXMoni
 ---
 
 For detailed instructions and examples, refer to the demo folder and the provided documentation. Happy monitoring with TXMonitor Smart Contract!
-
-## Digital Horizon
-If you need help and assistance on the contract deployment contact Digital Horizon [contact@digitalhorizon.sv]

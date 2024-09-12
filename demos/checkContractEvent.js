@@ -25,22 +25,16 @@ const monitorContractChecker = new ethers.Contract(monitor_CONTRACT_ADDRESS, mon
 
 
 // tracking Deposit Event
-monitorContractChecker.on("Deposit", async (from, to, amount, memo, event) => {
+monitorContractChecker.on("Deposit", async (from, to, amount, msgId, memo, encrypt, event) => {
 
     /* MEMO Object we send
-            {
-              timestamp: Date,
-              businessID: string,
-              amountBRL: string,
-              exchangeRate: string,
-              fee: string,
-              payername: string,
-              cpf: string,
-              mobile: string,
-              email: string,
-              e2eID: string,
-              geolocation: string
-            };
+    {
+        datetime: string,
+        amountBRL: string,
+        destination: string,
+        exchangerate: string,
+        e2e: string
+    };
 
     */
     try {
@@ -49,24 +43,35 @@ monitorContractChecker.on("Deposit", async (from, to, amount, memo, event) => {
         console.log("From:", from);
         console.log("To:", to);
         console.log("memo:", memo);
+        console.log("msgId:", msgId);
         console.log("TxHash: ", event.transactionHash);
-        
-        const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
-        console.log("transformed memo hex > ", JSON.parse(utf8String));
 
-        // Decrypt the memo message
-        const decryptedData = await EthCrypto.decryptWithPrivateKey(
-            privateKey,   // Private Key of the public key provided
-            JSON.parse(utf8String)
-        );
+        let decryptedData;
 
-        const decryptedDataOBJ = JSON.parse(decryptedData);
+        if (encrypt === true) {
+            const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
+
+            // Decrypt the memo message
+            decryptedData = await EthCrypto.decryptWithPrivateKey(
+                privateKey,   // Private Key of the public key provided
+                JSON.parse(utf8String)
+            );
+
+        } else {
+
+            const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
+
+            decryptedData = JSON.parse(utf8String)
+
+        }
+
+        const decryptedDataOBJ = encrypt ? decryptedData : JSON.parse(decryptedData);
 
         console.log('Decrypted Message:', decryptedDataOBJ);
-        console.log('Bussiness ID: ', decryptedDataOBJ.bussinessID);
+        console.log('Date: ', decryptedDataOBJ.datetime);
         console.log('Amount: ', decryptedDataOBJ.amountBRL);
-        console.log('Exchange Rate: ', decryptedDataOBJ.exchangeRate);
-        console.log('End2End: ', decryptedDataOBJ.e2eID);
+        console.log('Exchange Rate: ', decryptedDataOBJ.exchangerate);
+        console.log('End2End: ', decryptedDataOBJ.e2e);
 
     } catch (error) {
         console.error('Error processing event:', error);
@@ -74,23 +79,17 @@ monitorContractChecker.on("Deposit", async (from, to, amount, memo, event) => {
 });
 
 // tracking Withdraw Event
-monitorContractChecker.on("Withdraw", async (from, to, amount, memo, event) => {
-    /* MEMO Object we send
-         {
-           timestamp: Date,
-           businessID: string,
-           amountBRL: string,
-           exchangeRate: string,
-           fee: string,
-           payername: string,
-           cpf: string,
-           mobile: string,
-           email: string,
-           e2eID: string,
-           geolocation: string
-         };
+monitorContractChecker.on("Withdraw", async (from, to, amount, memo, encrypt, event) => {
 
- */
+    /* MEMO Object we send
+        {
+            datetime: string,
+            amountBRL: string,
+            destination: string,
+            exchangerate: string,
+            e2e: string
+        };
+    */
 
     try {
         console.log("Event received:");
@@ -99,21 +98,31 @@ monitorContractChecker.on("Withdraw", async (from, to, amount, memo, event) => {
         console.log("memo:", memo);
         console.log("TxHash: ", event.transactionHash);
 
-        const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
-        console.log("transformed memo hex > ", JSON.parse(utf8String));
+        let decryptedData;
 
-        // Decrypt the memo message
-        const decryptedData = await EthCrypto.decryptWithPrivateKey(
-            privateKey,   // Private Key of the public key provided
-            JSON.parse(utf8String)
-        );
+        if (encrypt === true) {
+            const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
 
-        const decryptedDataOBJ = JSON.parse(decryptedData);
+            // Decrypt the memo message
+            decryptedData = await EthCrypto.decryptWithPrivateKey(
+                privateKey,   // Private Key of the public key provided
+                JSON.parse(utf8String)
+            );
+
+        } else {
+
+            const utf8String = Buffer.from(memo.slice(2), 'hex').toString('utf8');
+
+            decryptedData = JSON.parse(utf8String)
+
+        }
+
+        const decryptedDataOBJ = encrypt ? decryptedData : JSON.parse(decryptedData);
 
         console.log('Decrypted Message:', decryptedDataOBJ);
-        console.log('Bussiness ID: ', decryptedDataOBJ.bussinessId);
-        console.log('Amount: ', decryptedDataOBJ.amount);
-        console.log('Exchange Rate: ', decryptedDataOBJ.exchangeRate);
+        console.log('Date: ', decryptedDataOBJ.datetime);
+        console.log('Amount: ', decryptedDataOBJ.amountBRL);
+        console.log('Exchange Rate: ', decryptedDataOBJ.exchangerate);
         console.log('End2End: ', decryptedDataOBJ.e2e);
 
     } catch (error) {
