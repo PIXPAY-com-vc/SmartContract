@@ -25,14 +25,14 @@ const monitorContractChecker = new ethers.Contract(MONITOR_CONTRACT_ADDRESS, mon
 
 
 // tracking Deposit Event
-monitorContractChecker.on("Deposit", async (from, to, amount, msgId, memo, encrypt, event) => {
+monitorContractChecker.on("Deposit", async (from, to, amount, msgId, message, encrypt, event) => {
 
     /* MEMO Object we send
     {
         datetime: string,
         amountBRL: string,
+        amountUSDT: string,
         destination: string,
-        exchangerate: string,
         e2e: string
     };
 
@@ -42,7 +42,7 @@ monitorContractChecker.on("Deposit", async (from, to, amount, msgId, memo, encry
         console.log("Event received:");
         console.log("From:", from);
         console.log("To:", to);
-        console.log("memo:", memo);
+        console.log("memo:", message);
         console.log("msgId:", msgId);
         console.log("TxHash: ", event.transactionHash);
 
@@ -65,12 +65,12 @@ monitorContractChecker.on("Deposit", async (from, to, amount, msgId, memo, encry
 
         }
 
-        const decryptedDataOBJ = encrypt ? decryptedData : JSON.parse(decryptedData);
+        const decryptedDataOBJ = encrypt ? JSON.parse(decryptedData) : decryptedData;
 
         console.log('Decrypted Message:', decryptedDataOBJ);
         console.log('Date: ', decryptedDataOBJ.datetime);
-        console.log('Amount: ', decryptedDataOBJ.amountBRL);
-        console.log('Exchange Rate: ', decryptedDataOBJ.exchangerate);
+        console.log('AmountBRL: ', decryptedDataOBJ.amountBRL);
+        console.log('AmountUSDT: ', decryptedDataOBJ.amountUSDT);
         console.log('End2End: ', decryptedDataOBJ.e2e);
 
     } catch (error) {
@@ -79,14 +79,14 @@ monitorContractChecker.on("Deposit", async (from, to, amount, msgId, memo, encry
 });
 
 // tracking Withdraw Event
-monitorContractChecker.on("Withdraw", async (from, to, amount, memo, encrypt, event) => {
+monitorContractChecker.on("Withdraw", async (from, to, amount, message, encrypt, event) => {
 
     /* MEMO Object we send
         {
             datetime: string,
             amountBRL: string,
+            amountUSDT: string,
             destination: string,
-            exchangerate: string,
             e2e: string
         };
     */
@@ -95,7 +95,7 @@ monitorContractChecker.on("Withdraw", async (from, to, amount, memo, encrypt, ev
         console.log("Event received:");
         console.log("From:", from);
         console.log("To:", to);
-        console.log("memo:", memo);
+        console.log("memo:", message);
         console.log("TxHash: ", event.transactionHash);
 
         let decryptedData;
@@ -117,12 +117,12 @@ monitorContractChecker.on("Withdraw", async (from, to, amount, memo, encrypt, ev
 
         }
 
-        const decryptedDataOBJ = encrypt ? decryptedData : JSON.parse(decryptedData);
+        const decryptedDataOBJ = encrypt ? JSON.parse(decryptedData) : decryptedData;
 
         console.log('Decrypted Message:', decryptedDataOBJ);
         console.log('Date: ', decryptedDataOBJ.datetime);
-        console.log('Amount: ', decryptedDataOBJ.amountBRL);
-        console.log('Exchange Rate: ', decryptedDataOBJ.exchangerate);
+        console.log('AmountBRL: ', decryptedDataOBJ.amountBRL);
+        console.log('AmountUSDT: ', decryptedDataOBJ.amountUSDT);
         console.log('End2End: ', decryptedDataOBJ.e2e);
 
     } catch (error) {
