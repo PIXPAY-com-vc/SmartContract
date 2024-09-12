@@ -17,8 +17,8 @@ contract TXMonitor is Ownable, ReentrancyGuard {
         // The contract can receive MATIC (ETH) transfers here
     }
 
-    event Deposit(address senderWallet,address indexed receiverWallet, uint256 indexed amount,bytes message);
-    event Withdraw(address senderWallet,address indexed receiverWallet, uint256 indexed amount,bytes message);
+    event Deposit(address senderWallet,address indexed receiverWallet, uint256 indexed amount, string msgId, bytes message);
+    event Withdraw(address senderWallet,address indexed receiverWallet, uint256 indexed amount, string msgId, bytes message);
     event TokensWithdraw(address indexed destination,uint256 amount);
 
     constructor(address initialOwner, address _usdtTokenContractAddress, string memory _businessId)
@@ -31,20 +31,21 @@ contract TXMonitor is Ownable, ReentrancyGuard {
         usdtTokenContractAddress = _usdtTokenContractAddress;
     }
 
-    function transfer(address recipient, uint256 amount,uint256 txtype, bytes memory memo) external nonReentrant {
+    function transfer(address recipient, uint256 amount, uint256 txtype, string memory msgId, bytes memory memo) external nonReentrant {
         require(amount > 0, "Amount must be greater than 0");
         require(recipient != address(0), "Invalid destination address");
         
+
         // Transfer the amount to the destination address
         IERC20(usdtTokenContractAddress).transferFrom(msg.sender, recipient, amount);
 
         if(txtype == 0 ){
 
-            emit Deposit(msg.sender,recipient,amount,memo);
+            emit Deposit(msg.sender, recipient, amount, msgId, memo);
 
         } else {
 
-            emit Withdraw(msg.sender,recipient,amount,memo);
+            emit Withdraw(msg.sender, recipient, amount, msgId, memo);
 
         }
     }
