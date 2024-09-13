@@ -11,7 +11,7 @@ const websocketRPC = "wss://polygon.api.onfinality.io/public-ws";
 
 const currentTimeFormatted = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
-const MONITOR_CONTRACT_ADDRESS = "0x6...."; // Your SmartContract for deployed smart contract Monitor
+const MONITOR_CONTRACT_ADDRESS = "0x...."; // Your SmartContract for deployed smart contract Monitor
 const hotWallet = "0x..." // Platform HotWallet Address
 const privateKey = "";  // Private Key of the public key provided
 
